@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/home_screen/home_screen_manager.dart';
+import 'package:music_player/music_player_screen/music_player_screen.dart';
 import 'package:music_player/service_locator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // TODO: ask the internet to give me some songs
+    getIt<HomeScreenManager>().updateSongs();
   }
 
   @override
@@ -21,13 +23,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: ValueListenableBuilder<List<String>>(
           valueListenable: getIt<HomeScreenManager>().songListNotifier,
-          builder: (context, value, child) {
+          builder: (context, songList, child) {
             return ListView.builder(
-              itemCount: 3,
+              itemCount: songList.length,
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
-                    title: Text('Songs Name'),
+                    title: Text(songList[index]),
+                    onTap: () {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                        builder: (context) => const MusicPlayerScreen()),
+                      );
+                    },
                   ),
                 );
               },
